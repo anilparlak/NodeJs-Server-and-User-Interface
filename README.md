@@ -3,6 +3,7 @@
 
 Web Server that instantly lists the sensor data transferred with LoRa
 
+![chart](https://user-images.githubusercontent.com/51484011/148235205-0b4ba7c7-9a6a-40f6-8f25-fae6a911596e.JPG)
 
 
 For npm modules 
