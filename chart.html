@@ -1,0 +1,378 @@
+<html>
+
+<head>
+    <title>Bitirme Projesi</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: center;
+            border-bottom: 1px solid #ccc;
+            padding: 15px 0;
+            margin: 0 0 30px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            color: #333;
+            font-size: 18px;
+            margin: 0 15px;
+        }
+
+        .chart-container {
+            width: 1200px;
+            height: 400px;
+            text-align: center;
+            margin: 0 auto 100px;
+        }
+
+        .button-container {
+            display: flex;
+            margin: 0 auto 100px;
+            justify-content: center;
+        }
+
+        .button-container button {
+            width: 160px;
+            height: 50px;
+            margin: 0 10px;
+            display: block;
+            border: 0;
+            background: rgba(194, 12, 12, 1);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .button-container button.active {
+            background: red;
+        }
+
+        .chart-container h1 {
+            font-size: 24px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .visible-hidden {
+            visibility: hidden !important;
+            height: 0 !important;
+        }
+
+        .visible {
+            visibility: visible !important;
+            height: auto !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <a href="/">Dashboard</a>
+        <a href="/chart">Chart</a>
+    </div>
+    <div class="button-container">
+        <button id="month" class="temperature-button active" data-id="month"> Aylık</button>
+        <button id="day" class="temperature-button" data-id="day">Günlük</button>
+        <button id="hour" class="temperature-button" data-id="hour">Saatlik</button>
+    </div>
+    <div class="chart-container">
+        <h1>Sıcaklık</h1>
+        <canvas id="temperatureMonth" class="temperature month" width="1200" height="400"></canvas>
+        <canvas id="temperatureDay" class="temperature day visible-hidden" width="1200" height="400"></canvas>
+        <canvas id="temperatureHour" class="temperature hour visible-hidden" width="1200" height="400"></canvas>
+    </div>
+    <div class="chart-container">
+        <h1>Basınç</h1>
+        <canvas id="pressureMonth" class="temperature month" width="1200" height="400"></canvas>
+        <canvas id="pressureDay" class="temperature day visible-hidden" width="1200" height="400"></canvas>
+        <canvas id="pressureHour" class="temperature hour visible-hidden" width="1200" height="400"></canvas>
+    </div>
+    <div class="chart-container">
+        <h1>Nem</h1>
+        <canvas id="humidityMonth" class="temperature month" width="1200" height="400"></canvas>
+        <canvas id="humidityDay" class="temperature day visible-hidden" width="1200" height="400"></canvas>
+        <canvas id="humidityHour" class="temperature hour visible-hidden" width="1200" height="400"></canvas>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"
+        integrity="sha512-yadYcDSJyQExcKhjKSQOkBKy2BLDoW6WnnGXCAkCoRlpHGpYuVuBqGObf3g/TdB86sSbss1AOP4YlGSb6EKQPg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
+    <script>
+        // aylık
+        var url = window.location.origin;
+        var monthLabel = []
+        var node1Data = []
+        var node2Data = []
+        var node3Data = []
+        var nodePressure1Data = []
+        var nodePressure2Data = []
+        var nodePressure3Data = []
+        var humidity1Data = []
+        var humidity2Data = []
+        var humidity3Data = []
+        $.ajax({
+            url: url + "/date/get_month",
+            cache: false,
+            success: function (data) {
+                Object.keys(data[0]).map((item) => {
+                    //console.log(data[0][item])
+
+                    data[0][item].map((x, key) => {
+                        if (monthLabel.indexOf(x['month']) === -1) { 
+                            monthLabel.push(x['month'])
+                        }
+                        if (item === 'node1') {
+                            node1Data.push(x['temperature'])
+                            nodePressure1Data.push(x['pressure'])
+                            humidity1Data.push(x['humidity'])
+                        }
+                        if (item === 'node2') {
+                            node2Data.push(x['temperature'])
+                            nodePressure2Data.push(x['pressure'])
+                            humidity2Data.push(x['humidity'])
+                        }
+                        if (item === 'node3') {
+                            node3Data.push(x['temperature'])
+                            nodePressure3Data.push(x['pressure'])
+                            humidity3Data.push(x['humidity'])
+                        }
+                    })
+                })
+                console.log(node1Data)
+                LineChart('temperatureMonth', monthLabel, node1Data, node2Data, node3Data, '°C')
+                LineChart('pressureMonth', monthLabel, nodePressure1Data, nodePressure2Data, nodePressure3Data, 'Pa')
+                LineChart('humidityMonth', monthLabel, humidity1Data, humidity2Data, humidity3Data, '%')
+                // humidityMonth
+            }
+        });
+
+
+        var dayLabel = []
+        var dayNode1Data = []
+        var dayNode2Data = []
+        var dayNode3Data = []
+        var dayPressure1Data = []
+        var dayPressure2Data = []
+        var dayPressure3Data = []
+        var dayHumidity1Data = []
+        var dayHumidity2Data = []
+        var dayHumidity3Data = []
+        $.ajax({
+            url: url + "/date/get_day",
+            cache: false,
+            success: function (data) {
+                Object.keys(data[0]).map((item) => {
+                    //console.log(data[0][item])
+
+                    data[0][item].map((x, key) => {
+                        if (dayLabel.indexOf(x['day']) === -1) {
+                            dayLabel.push(x['day'])
+                        }
+                        if (item === 'node1') {
+                            dayNode1Data.push(x['temperature'])
+                            dayPressure1Data.push(x['pressure'])
+                            dayHumidity1Data.push(x['humidity'])
+                        }
+                        if (item === 'node2') {
+                            dayNode2Data.push(x['temperature'])
+                            dayPressure2Data.push(x['pressure'])
+                            dayHumidity2Data.push(x['humidity'])
+                        } 1
+                        if (item === 'node3') {
+                            dayNode3Data.push(x['temperature'])
+                            dayPressure3Data.push(x['pressure'])
+                            dayHumidity3Data.push(x['humidity'])
+                        }
+                    })
+                })
+                console.log(dayLabel)
+                LineChart('temperatureDay', dayLabel, dayNode1Data, dayNode2Data, dayNode3Data, '°C')
+                LineChart('pressureDay', dayLabel, dayPressure1Data, dayPressure2Data, dayPressure3Data, 'Pa')
+                LineChart('humidityDay', dayLabel, dayHumidity1Data, dayHumidity2Data, dayHumidity3Data, '%')
+
+            }
+        });
+
+        var hourLabel = []
+        var hourNode1Data = []
+        var hourNode2Data = []
+        var hourNode3Data = []
+        var hourPressure1Data = []
+        var hourPressure2Data = []
+        var hourPressure3Data = []
+        var hourHumidity1Data = []
+        var hourHumidity2Data = []
+        var hourHumidity3Data = []
+        $.ajax({
+            url: url + "/date/get_hour",
+            cache: false,
+            success: function (data) {
+                Object.keys(data[0]).map((item) => {
+                    //console.log(data[0][item])
+
+                    data[0][item].map((x, key) => {
+                        if (hourLabel.indexOf(x['hours']) === -1) {
+                            hourLabel.push(x['hours'])
+                        }
+                        if (item === 'node1') {
+                            hourNode1Data.push(x['temperature'])
+                            hourPressure1Data.push(x['pressure'])
+                            hourHumidity1Data.push(x['humidity'])
+                        }
+                        if (item === 'node2') {
+                            hourNode2Data.push(x['temperature'])
+                            hourPressure2Data.push(x['pressure'])
+                            hourHumidity2Data.push(x['humidity'])
+                        }
+                        if (item === 'node3') {
+                            hourNode3Data.push(x['temperature'])
+                            hourPressure3Data.push(x['pressure'])
+                            hourHumidity3Data.push(x['humidity'])
+                        }
+                    })
+                })
+                console.log(hourLabel)
+                LineChart('temperatureHour', hourLabel, hourNode1Data, hourNode2Data, hourNode3Data, '°C')
+                LineChart('pressureHour', hourLabel, hourPressure1Data, hourPressure2Data, hourPressure3Data, 'Pa')
+                LineChart('humidityHour', hourLabel, hourHumidity1Data, hourHumidity2Data, hourHumidity3Data, '%')
+            }
+        });
+
+
+        function LineChart(chartName, label, node1Data, node2Data, node3Data, text) {
+            var canvas = document.getElementById(chartName).getContext("2d");
+            var data = {
+                labels: label,
+                datasets: [
+                    {
+                        data: node1Data,
+                        fill: false,
+                        label: 'Node 1',
+                        lineTension: 0.1,
+                        backgroundColor: 'rgba(75,192,192,0.4)',
+                        borderWidth: 3,
+                        borderColor: 'rgba(75,192,192,1)',
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                        pointBorderColor: 'rgba(75,192,192,1)',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+                        pointHoverBorderColor: 'rgba(220,220,220,1)',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 3,
+                        pointHitRadius: 20,
+                        pointStyle: 'circle',
+                    },
+                    {
+                        data: node2Data,
+                        fill: false,
+                        label: 'Node 2',
+                        lineTension: 0.1,
+                        backgroundColor: 'red',
+                        borderWidth: 3,
+                        borderColor: '#e60000',
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                        pointBorderColor: 'red',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'red',
+                        pointHoverBorderColor: 'red',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 3,
+                        pointHitRadius: 20,
+                        pointStyle: 'circle',
+                    },
+                    {
+                        data: node3Data,
+                        fill: false,
+                        label: 'Node 3',
+                        lineTension: 0.1,
+                        backgroundColor: 'green',
+                        borderWidth: 3,
+                        borderColor: 'green',
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                        pointBorderColor: 'green',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 5,
+                        pointHoverBackgroundColor: 'green',
+                        pointHoverBorderColor: 'green',
+                        pointHoverBorderWidth: 2,
+                        pointRadius: 3,
+                        pointHitRadius: 20,
+                        pointStyle: 'circle',
+                    }
+                ]
+            };
+
+            var lineChart = new Chart(canvas, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'bottom',
+                    },
+                    hover: {
+                        mode: 'label'
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                color: 'black',
+                                display: true,
+                                text: 'Tarih'
+                            }
+                        },
+                        y: {
+                            title: {
+                                color: 'black',
+                                display: true,
+                                text: text
+                            }
+                        }
+                    }
+                }
+            })
+
+        }
+
+
+        $('.temperature-button').on('click', function (e) {
+            e.preventDefault();
+            $('button').removeClass('active')
+            $(this).addClass('active')
+            const id = $(this).data('id')
+            $('.temperature').removeClass('visible');
+            $('.temperature').addClass('visible-hidden');
+            console.log(id)
+            $('.' + id).removeClass('visible-hidden')
+            $('.' + id).addClass('visible')
+        })
+    </script>
+</body>
+
+</html>

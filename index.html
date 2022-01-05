@@ -1,0 +1,389 @@
+<html>
+<head>
+    <title>User Interface</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .menu{
+            display:flex;
+            justify-content:center;
+            border-bottom:1px solid #ccc;
+            padding:15px 0;
+            margin:0 0 30px;
+        }
+        .menu a{
+            text-decoration:none;
+            font-family: 'Montserrat', sans-serif;
+            color:#fff;
+            font-size:18px;
+            margin:0 15px;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            margin: 0 auto;
+        }
+
+        .left,
+        .right {
+            width: 50%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px 20px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        h4 {
+            margin: 0 5px 15px;
+            font-weight: 700;
+            font-size: 24px;
+            text-align: center;
+            display: block;
+        }
+
+        h6 {
+            font-size: 24px;
+            font-weight: 300;
+            margin: 0 0 35px 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .box {
+            width: 33.33%;
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            color: #fff;
+            margin: 0 5px;
+        }
+
+        .box span {
+            font-size: 24px;
+            text-align: center;
+            display: block;
+            margin: 35px 0 0;
+        }
+
+        .hot {
+            background: rgb(229, 9, 9);
+            background: linear-gradient(180deg, rgba(229, 9, 9, 1) 0%, rgba(194, 12, 12, 1) 100%);
+
+        }
+
+        .thermometer,
+        .nem,
+        .basinc {
+            background: url('/images/thermometer.svg') no-repeat;
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            filter: invert(100%) sepia(1%) saturate(129%) hue-rotate(209deg) brightness(117%) contrast(100%);
+        }
+
+        .nem-bg {
+            background: rgb(9, 147, 229);
+            background: linear-gradient(180deg, rgba(9, 147, 229, 1) 0%, rgba(17, 196, 217, 1) 100%);
+        }
+
+        .basinc-bg {
+            background: rgb(229, 93, 9);
+            background: linear-gradient(180deg, rgba(229, 93, 9, 1) 0%, rgba(217, 147, 17, 1) 100%);
+        }
+
+        .nem {
+            background: url('images/nem.svg') no-repeat;
+            filter: none !important;
+            /*filter: invert(100%) sepia(1%) saturate(129%) hue-rotate(209deg) brightness(117%) contrast(100%);*/
+        }
+
+        .basinc {
+            background: url('images/basinc.svg') no-repeat;
+            filter: invert(100%) sepia(1%) saturate(129%) hue-rotate(209deg) brightness(117%) contrast(100%);
+        }
+
+        em {
+            font-style: normal;
+        }
+
+        .date {
+            margin: 15px;
+            text-align: center;
+            font-size: 14px;
+            display: block;
+        }
+
+        .form {
+            width: 100%;
+        }
+
+        button {
+            width: 160px;
+            height: 50px;
+            margin: 15px auto 0;
+            display: block;
+            border: 0;
+            background: rgba(194, 12, 12, 1);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        @media screen and (max-width:1120px) {
+            .container {
+                width: 100%;
+                flex-direction: column
+            }
+
+            .left,
+            .right {
+                width: 100%;
+                padding: 0;
+                margin: 0 0 30px 0;
+            }
+        }
+
+        @media screen and (max-width:480px) {
+            .box {
+                width: 30%;
+                padding: 1.5%;
+                margin: 1%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <a href="/">Dashboard</a>
+        <a href="/chart">Chart</a>
+    </div>
+    <div class="container">
+        <div class="left">
+            <h4>Node 1</h4>
+            <div class="flex">
+                <div class="box hot">
+                    <h6>Sıcaklık</h6>
+                    <i class="icon thermometer"></i>
+                    <span id="temperature-1"><em>0</em> °C</span>
+                </div>
+                <div class="box nem-bg">
+                    <h6>Nem</h6>
+                    <i class="icon nem"></i>
+                    <span id="humidity-1"><em>0</em> %</span>
+                </div>
+                <div class="box basinc-bg">
+                    <h6>Basınç</h6>
+                    <i class="icon basinc"></i>
+                    <span id="pressure-1"><em>0</em> Pa</span>
+                </div>
+            </div>
+            <span class="date">Son güncellenme tarihi : <em id="date-1"></em></span>
+            <button id="led" data-status="0">İşlem başlat</button>
+        </div>
+        <div class="right">
+            <h4>Node 2 </h4>
+            <div class="flex">
+                <div class="box hot">
+                    <h6>Sıcaklık</h6>
+                    <i class="icon thermometer"></i>
+                    <span id="temperature-2"><em>0</em> °C</span>
+                </div>
+                <div class="box nem-bg">
+                    <h6>Nem</h6>
+                    <i class="icon nem"></i>
+                    <span id="humidity-2"><em>0</em> %</span>
+                </div>
+                <div class="box basinc-bg">
+                    <h6>Basınç</h6>
+                    <i class="icon basinc"></i>
+                    <span id="pressure-2"><em>0</em> Pa</span>
+                </div>
+            </div>
+            <span class="date">Son güncellenme tarihi : <em id="date-2"></em></span>
+            <button id="led2" data-status="0">İşlem başlat</button>
+        </div>
+        <div class="right">
+            <h4>Node 3 </h4>
+            <div class="flex">
+                <div class="box hot">
+                    <h6>Sıcaklık</h6>
+                    <i class="icon thermometer"></i>
+                    <span id="temperature-3"><em>0</em> °C</span>
+                </div>
+                <div class="box nem-bg">
+                    <h6>Nem</h6>
+                    <i class="icon nem"></i>
+                    <span id="humidity-3"><em>0</em> %</span>
+                </div>
+                <div class="box basinc-bg">
+                    <h6>Basınç</h6>
+                    <i class="icon basinc"></i>
+                    <span id="pressure-3"><em>0</em> Pa</span>
+                </div>
+            </div>
+            <span class="date">Son güncellenme tarihi : <em id="date-3"></em></span>
+            <button id="led3" data-status="0">İşlem başlat</button>
+        </div>
+    </div>
+    <!-- Script -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/tr.min.js"></script>
+    <script>
+        
+        $(document).ready(function () {
+
+            var url = window.location.href;
+
+            getData(url);
+            setInterval(function () {
+                getData(url);
+            }, 1000)
+
+            // Controls the Start process button in the Node 1 field.
+            getButtonEvent("button/get", "#led")
+
+            // Controls the Start process button in the Node 2 field.
+            getButtonEvent("button/get2", "#led2")
+
+             // Controls the Start process button in the Node 3 field.
+             getButtonEvent("button/get3", "#led3")
+
+            function getButtonEvent(method, led) {
+                $.ajax({
+                    url: url + method,
+                    cache: false,
+                    success: function (data) {
+                        if (data === "true") {
+                            $(led).attr('data-status', "1")
+                            $(led).text('İşlemi durdur')
+                        } else {
+                            $(led).attr('data-status', "0")
+                            $(led).text('İşlemi başlat')
+                        }
+                    }
+                });
+            }
+
+
+            function getData(url) {
+                // node 1 için sıcaklık, nem ve basınc datalarını getir.
+                // Db'de kayıtlı son işlemi getirir.
+                $.ajax({
+                    url: url + "node1/get_last",
+                    cache: false,
+                    success: function (data) {
+
+                        // Dönen tarih formatlanır.
+                        var formattedDate = new Date(data.updatedAt);
+                        // Gelen datayı html içine yazar.
+                        $('#temperature-1 em').text(data.temperature)
+                        $('#pressure-1 em').text(data.pressure)
+                        $('#humidity-1 em').text(data.humidity)
+                        $('#date-1').text(moment(formattedDate).format('LLLL:s'))
+                    }
+                });
+
+                // node 2 için sıcaklık, nem ve basınc datalarını getir.
+                // Db'de kayıtlı son işlemi getirir.
+
+                $.ajax({
+                    //url: "http://192.168.43.23:3000/node2/get_last",
+                    url: url + "node2/get_last",
+                    cache: false,
+                    success: function (data) {
+
+                        var formattedDate = new Date(data.updatedAt);
+
+                        $('#temperature-2 em').text(data.temperature)
+                        $('#pressure-2 em').text(data.pressure)
+                        $('#humidity-2 em').text(data.humidity)
+                        $('#date-2').text(moment(formattedDate).format('LLLL:s'))
+                    }
+                });
+
+                $.ajax({
+                    //url: "http://192.168.43.23:3000/node2/get_last",
+                    url: url + "node3/get_last",
+                    cache: false,
+                    success: function (data) {
+
+                        var formattedDate = new Date(data.updatedAt);
+
+                        $('#temperature-3 em').text(data.temperature)
+                        $('#pressure-3 em').text(data.pressure)
+                        $('#humidity-3 em').text(data.humidity)
+                        $('#date-3').text(moment(formattedDate).format('LLLL:s'))
+                    }
+                });
+            }
+
+
+            // FALSE = 0
+            // TRUE = 1
+            $('#led').click(function (e) {
+                e.preventDefault();
+                handleClickEvent('#led', 'button/update');
+            })
+
+            $('#led2').click(function (e) {
+                e.preventDefault();
+                handleClickEvent('#led2', 'button/update2');
+            })
+
+            $('#led3').click(function (e) {
+                e.preventDefault();
+                handleClickEvent('#led3', 'button/update3');
+            })
+
+
+            function handleClickEvent(led, method ) {
+                var buttonStats = $(led).attr('data-status')
+
+                if (buttonStats == "0") {
+                    var changeStatus = true;
+                } else {
+                    var changeStatus = false;
+                }
+
+                $.ajax({
+                    url: url+method+"?status=" + changeStatus,
+                    cache: false,
+                    success: function (data) {
+                        if (buttonStats == "0") {
+                            $(led).attr('data-status', "1")
+                            $(led).text('İşlemi durdur')
+                        }
+                        else {
+                            $(led).attr('data-status', "0")
+                            $(led).text('İşlemi başlat')
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+</body>
+
+</html>
