@@ -3,7 +3,6 @@
 
 Web Server that instantly lists the sensor data transferred with LoRa
 
-![chart](https://user-images.githubusercontent.com/51484011/148235205-0b4ba7c7-9a6a-40f6-8f25-fae6a911596e.JPG)
 
 
 For npm modules 
@@ -28,3 +27,12 @@ Get to the address above to send an order to the relevant End Node.
 
 
 The data recorded in MongoDB is exported to graphs in the user interface.
+
+
+# Images
+
+
+![userInterface](https://user-images.githubusercontent.com/51484011/148235438-b985079f-1982-46ce-9533-681bc0edf45f.JPG)
+
+
+![chart](https://user-images.githubusercontent.com/51484011/148235205-0b4ba7c7-9a6a-40f6-8f25-fae6a911596e.JPG)
